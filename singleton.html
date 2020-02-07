@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>单例模式singleton</title>
+</head>
+<body>
+    <script>
+        // var Singleton = function(name) {
+        //     this.name = name;
+        //     this.instance = null;
+        // };
+        // Singleton.prototype.getName = function() {
+        //     alert(this.name);
+        // };
+        // Singleton.getInstance = function(name) {
+        //     console.log(this.instance);
+        //     if(!this.instance) {
+        //         console.log(this.instance);
+        //         this.instance = new Singleton(name);
+        //     }
+        //     console.log(this.instance);
+        //     return this.instance;
+        // };
+        // var a = Singleton.getInstance('sven1');
+        // var b = Singleton.getInstance('sven2');
+        // // a.getName();
+        // // b.getName();
+        // console.log(a);
+        // console.log(b);
+        // console.log(b === a);
+
+        var Singleton = function(name) {
+            this.name = name;
+        };
+        Singleton.prototype.getName = function() {
+            alert(this.name);
+        };
+        Singleton.getInstance = (function() {
+            var instance = null;
+            return function(name) {
+                if(!instance) {
+                    instance = new Singleton(name);
+                }
+                return instance;
+            }
+        })();
+        // var a = Singleton.getInstance('sven1');
+        // console.log(a);
+        // a.getName();
+        // var b = Singleton.getInstance('sven2');
+        // console.log(b);
+        // b.getName();
+        // console.log(a===b);
+        // let myTest = (function test() {
+        //     let testValue = 123;
+        //     const myConst = Math.PI;
+        //     return function inner() {
+        //         console.log(testValue);
+        //         testValue = 'change';
+        //         console.log(myConst);
+        //     }
+        // })();
+        // myTest();
+        // myTest();
+
+        // var CreateDiv = (function() {
+        //     console.log(this);
+        //     var instance;
+        //     var CreateDiv = function(html) {
+        //         console.log(this);
+        //         if(instance) {
+        //             return instance;
+        //         }
+        //         this.html = html;
+        //         this.init();
+        //         console.log(this);
+        //         return instance = this;
+        //     };
+        //     CreateDiv.prototype.init = function() {
+        //         var div = document.createElement('div');
+        //         div.innerHTML = this.html;
+        //         document.body.appendChild(div);
+        //     };
+        //     return CreateDiv;
+        // })();
+        // // console.log(CreateDiv);
+        // var a = new CreateDiv('sven1');
+        // console.log(a);
+        // // console.log(CreateDiv);
+        // var b = new CreateDiv('sven2');
+        // console.log(b);
+
+        var CreateDiv = function(html) {
+            this.html = html;
+            this.init();
+        };
+        CreateDiv.prototype.init = function() {
+            var div = document.createElement('div');
+            div.innerHTML = this.html;
+            document.body.appendChild(div);
+        };
+        var ProxySingletonCreateDiv = (function() {
+            var instance;
+            return function(html) {
+                if(!instance) {
+                    instance = new CreateDiv(html);
+                }
+                return instance;
+            }
+        })();
+        var a = new ProxySingletonCreateDiv('sven1');
+        var b = new ProxySingletonCreateDiv('sven2');
+        console.log(a===b);
+
+        var namespace1 = {
+            a: function() {
+                alert(1);
+            },
+            b: function() {
+                alert(2);
+            }
+        };
+
+        var MyApp = {};
+        MyApp.namespace = function(name) {
+            var parts = name.split('.');
+            var current = MyApp;
+            for(var i in parts) {
+                if(!current[parts[i]]) {
+                    current[parts[i]] = {};
+                }
+                current = current[parts[i]];
+            }
+        };
+        MyApp.namespace('event');
+        MyApp.namespace('dom.style');
+        console.dir(MyApp);
+        console.log(MyApp);
+        
+        var user = (function() {
+            var _name = 'sven',
+                _age = 29;
+            return {
+                getUserInfo: function() {
+                    return _name + '-' + _age;
+                }
+            }
+        })();
+        console.log(user.getUserInfo());
+    </script>
+</body>
+</html>
